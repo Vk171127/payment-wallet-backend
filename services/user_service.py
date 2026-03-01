@@ -11,6 +11,14 @@ def hashpassword(password: str):
 def verifypassword(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
 
+def authenticate_user(db: Session, email: str, password: str):
+    user = user_repository.get_user_by_email(db, email)
+    if not user:
+        return None
+    if not verifypassword(password, user.password_hash):
+        return None
+    return user
+
 def register_user(db: Session, user_data: UserCreate):
     existing_user = user_repository.get_user_by_email(db, user_data.email)
     if existing_user:
