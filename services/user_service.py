@@ -3,7 +3,7 @@ from repositories import user_repository, wallet_repository
 from schema.user import UserCreate
 from passlib.context import CryptContext
 
-pwd_context = CryptContext(schemes=['bcrypt'], deprecated ='auto')
+pwd_context = CryptContext(schemes=['bcrypt'], deprecated ='auto', bcrypt__rounds=12)
 
 def hashpassword(password: str):
     return pwd_context.hash(password)
