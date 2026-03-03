@@ -3,21 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from schema.user import UserCreate, UserResponse, UserLogin
 from services import user_service
-from datetime import datetime, timedelta, timezone
-from jose import jwt
-import os
+from utils.jwt_handler import create_access_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = "HS256"
-
-def create_access_token(data: dict):
-    to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes=30)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
 
 @router.post("/register", response_model=UserResponse)
 def register(userData: UserCreate, db: Session = Depends(get_db)):
